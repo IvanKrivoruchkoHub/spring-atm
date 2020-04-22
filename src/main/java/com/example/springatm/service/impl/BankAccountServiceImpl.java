@@ -15,4 +15,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     public BankAccount save(BankAccount bankAccount) {
         return bankAccountRepository.save(bankAccount);
     }
+
+    @Override
+    public BankAccount findById(Long id) {
+        return bankAccountRepository.findById(id).orElse(null);
+    }
 }

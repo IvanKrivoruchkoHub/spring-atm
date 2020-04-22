@@ -1,18 +1,15 @@
 package com.example.springatm.entity;
 
-import lombok.Data;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+public enum Banknote {
+    BANKNOTE100(100), BANKNOTE200(200), BANKNOTE500(500);
 
-@Entity
-@Data
-@Table(name = "banknotes")
-public class Banknote {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private Integer value;
+
+    Banknote(Integer value) {
+        this.value = value;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
 }
