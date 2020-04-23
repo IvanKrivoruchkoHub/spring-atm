@@ -6,6 +6,6 @@ import java.math.BigDecimal;
 @Data
 public class GetMoneyFromAtmDto {
     private BigDecimal sum;
-    private Long accountId;
+    private String numberOfAccount;
     private Long atmId;
 }

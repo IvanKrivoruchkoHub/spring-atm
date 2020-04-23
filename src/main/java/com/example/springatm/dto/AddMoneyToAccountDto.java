@@ -6,5 +6,5 @@ import java.math.BigDecimal;
 @Data
 public class AddMoneyToAccountDto {
     private BigDecimal sum;
-    private Long bankAccountId;
+    private String numberOfAccount;
 }

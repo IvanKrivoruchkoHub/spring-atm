@@ -39,10 +39,10 @@ public class AtmController {
     }
 
     @GetMapping
-    public Map<Banknote, Long> getMoneyFromAtm(@RequestParam Long accountId,
+    public Map<Banknote, Long> getMoneyFromAtm(@RequestParam String accountNumber,
                                                @RequestParam Long atmId,
                                                @RequestParam BigDecimal sum) {
-        BankAccount bankAccount = bankAccountService.findById(accountId);
+        BankAccount bankAccount = bankAccountService.findByNumberOfBankAccount(accountNumber);
         Atm atm = atmService.findById(atmId);
         if (bankAccount.getSum().compareTo(sum) < 0) {
             throw new ResponseStatusException(

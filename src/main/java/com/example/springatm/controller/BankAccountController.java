@@ -27,11 +27,7 @@ public class BankAccountController {
     private BankAccountService bankAccountService;
 
     @PostMapping("/newUserAndBankAccount")
-    public Long createBankAccountAndUser(@RequestBody BankAccountAndUserCreateDto bankAccountAndUserCreateDto) {
-        if (userService.findByLogin(bankAccountAndUserCreateDto.getLogin()) != null) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "This user has already exist");
-        }
+    public String createBankAccountAndUser(@RequestBody BankAccountAndUserCreateDto bankAccountAndUserCreateDto) {
         User user = new User();
         user.setLogin(bankAccountAndUserCreateDto.getLogin());
         user.setPassword(bankAccountAndUserCreateDto.getPassword());
@@ -41,44 +37,35 @@ public class BankAccountController {
         bankAccount = bankAccountService.save(bankAccount);
         user.addBankAccount(bankAccount);
         userService.save(user);
-        return bankAccount.getId();
+        return bankAccount.getNumberOfBankAccount();
     }
 
     @PostMapping("/newBankAccountForUser")
-    public Long addBankAccountForUser(@RequestBody BankAccountCreateDto bankAccountCreateDto) {
+    public String addBankAccountForUser(@RequestBody BankAccountCreateDto bankAccountCreateDto) {
         User user = userService.findByLogin(bankAccountCreateDto.getLogin());
-        if (user == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "User don't exist");
-        }
         BankAccount bankAccount = new BankAccount();
         bankAccount.setSum(bankAccountCreateDto.getSum());
         bankAccount = bankAccountService.save(bankAccount);
         user.addBankAccount(bankAccount);
         userService.save(user);
-        return bankAccount.getId();
+        return bankAccount.getNumberOfBankAccount();
     }
 
 
     @PutMapping(value = "/addingSum")
     public BigDecimal addMoneyToAccount(@RequestBody AddMoneyToAccountDto addMoneyToAccountDto) {
-        BankAccount bankAccount = bankAccountService.findById(addMoneyToAccountDto.getBankAccountId());
-        if (bankAccount == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Can't find account");
-        }
+        BankAccount bankAccount = bankAccountService
+                .findByNumberOfBankAccount(addMoneyToAccountDto.getNumberOfAccount());
         bankAccount.addMoney(addMoneyToAccountDto.getSum());
         return bankAccountService.save(bankAccount).getSum();
     }
 
     @PostMapping(value = "/sendingSum")
     public BigDecimal sendSumToAccount(@RequestBody SendSumToAccountDto sendSumToAccountDto) {
-        BankAccount fromAccount = bankAccountService.findById(sendSumToAccountDto.getFromAccountId());
-        BankAccount toAccount = bankAccountService.findById(sendSumToAccountDto.getToAccountId());
-        if (fromAccount == null || toAccount == null) {
-            throw new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Can't find accounts");
-        }
+        BankAccount fromAccount = bankAccountService
+                .findByNumberOfBankAccount(sendSumToAccountDto.getFromAccountNumber());
+        BankAccount toAccount = bankAccountService
+                .findByNumberOfBankAccount(sendSumToAccountDto.getToAccountNumber());
         if (fromAccount.getSum().compareTo(sendSumToAccountDto.getSum()) < 0) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR, "Not enough money to send");

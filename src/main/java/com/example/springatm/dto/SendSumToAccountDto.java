@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 
 @Data
 public class SendSumToAccountDto {
-    private Long fromAccountId;
-    private Long toAccountId;
+    private String fromAccountNumber;
+    private String toAccountNumber;
     private BigDecimal sum;
 }

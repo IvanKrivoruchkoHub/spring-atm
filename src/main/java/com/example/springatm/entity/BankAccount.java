@@ -2,7 +2,6 @@ package com.example.springatm.entity;
 
 import lombok.Data;
 import java.math.BigDecimal;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +15,7 @@ public class BankAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String numberOfBankAccount;
     private BigDecimal sum;
 
     public BigDecimal addMoney(BigDecimal addedSum) {
