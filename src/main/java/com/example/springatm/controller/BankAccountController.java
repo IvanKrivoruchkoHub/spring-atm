@@ -27,7 +27,13 @@ public class BankAccountController {
     private BankAccountService bankAccountService;
 
     @PostMapping("/newUserAndBankAccount")
-    public String createBankAccountAndUser(@RequestBody BankAccountAndUserCreateDto bankAccountAndUserCreateDto) {
+    public String createBankAccountAndUser(
+            @RequestBody BankAccountAndUserCreateDto bankAccountAndUserCreateDto) {
+        if (userService.isUserExist(bankAccountAndUserCreateDto.getLogin())) {
+            throw new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "User has already exist with login = " + bankAccountAndUserCreateDto.getLogin());
+        }
         User user = new User();
         user.setLogin(bankAccountAndUserCreateDto.getLogin());
         user.setPassword(bankAccountAndUserCreateDto.getPassword());

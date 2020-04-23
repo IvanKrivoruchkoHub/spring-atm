@@ -28,4 +28,9 @@ public class UserServiceImpl implements UserService {
         }
         return user.get();
     }
+
+    @Override
+    public boolean isUserExist(String login) {
+        return userRepository.findByLogin(login).isPresent();
+    }
 }
