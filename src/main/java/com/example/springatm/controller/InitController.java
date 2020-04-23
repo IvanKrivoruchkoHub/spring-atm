@@ -32,15 +32,19 @@ public class InitController {
         atm.addBanknotes(Banknote.BANKNOTE200, 100L);
         atm.addBanknotes(Banknote.BANKNOTE500, 100L);
 
-        atm = atmService.save(atm);
-        atm.addBanknotes(Banknote.BANKNOTE100, 200L);
-        atm = atmService.save(atm);
+        atmService.save(atm);
 
         BankAccount bankAccount1 = new BankAccount();
         bankAccount1.setSum(new BigDecimal("5000"));
         bankAccount1 = bankAccountService.save(bankAccount1);
+
+        BankAccount bankAccount2 = new BankAccount();
+        bankAccount2.setSum(new BigDecimal("10000"));
+        bankAccount2 = bankAccountService.save(bankAccount2);
+
         User user = new User();
         user.addBankAccount(bankAccount1);
+        user.addBankAccount(bankAccount2);
         user.setLogin("user1");
         user.addRole(Role.USER);
         user.setPassword("user1");

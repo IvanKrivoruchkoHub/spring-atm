@@ -1,6 +1,7 @@
 package com.example.springatm.controller;
 
 import com.example.springatm.dto.AtmBanknotesDto;
+import com.example.springatm.dto.GetMoneyFromAtmDto;
 import com.example.springatm.entity.Atm;
 import com.example.springatm.entity.BankAccount;
 import com.example.springatm.entity.Banknote;
@@ -14,10 +15,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -29,7 +28,7 @@ public class AtmController {
     @Autowired
     private BankAccountService bankAccountService;
 
-    @PostMapping
+    @PostMapping(value = "/addingBanknotes")
     public void addBanknotes(@RequestBody AtmBanknotesDto atmBanknotesDto) {
         Atm atm = atmService.findById(atmBanknotesDto.getAtmId());
         for (Map.Entry<Banknote, Long> banknoteEntry : atmBanknotesDto.getBanknoteMap().entrySet()) {
@@ -38,24 +37,23 @@ public class AtmController {
         atmService.save(atm);
     }
 
-    @GetMapping
-    public Map<Banknote, Long> getMoneyFromAtm(@RequestParam String accountNumber,
-                                               @RequestParam Long atmId,
-                                               @RequestParam BigDecimal sum) {
-        BankAccount bankAccount = bankAccountService.findByNumberOfBankAccount(accountNumber);
-        Atm atm = atmService.findById(atmId);
-        if (bankAccount.getSum().compareTo(sum) < 0) {
+    @PostMapping(value = "/gettingBanknotes")
+    public Map<Banknote, Long> getBanknotesFromAtm(@RequestBody GetMoneyFromAtmDto getMoneyFromAtmDto) {
+        BankAccount bankAccount = bankAccountService
+                .findByNumberOfBankAccount(getMoneyFromAtmDto.getNumberOfAccount());
+        Atm atm = atmService.findById(getMoneyFromAtmDto.getAtmId());
+        if (bankAccount.getSum().compareTo(getMoneyFromAtmDto.getSum()) < 0) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Not enough money on bankAccount. You have : " + bankAccount.getSum());
         }
         BigDecimal sumAtm = getSumFromMapOfBanknotes(atm.getBanknotes());
-        if (sumAtm.compareTo(sum) < 0) {
+        if (sumAtm.compareTo(getMoneyFromAtmDto.getSum()) < 0) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
                     "Not enough money on atm!");
         }
-        if (!sum.remainder(new BigDecimal(100))
+        if (!getMoneyFromAtmDto.getSum().remainder(new BigDecimal(100))
                 .equals(new BigDecimal(0))) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
@@ -65,17 +63,20 @@ public class AtmController {
         Map<Banknote, Long> result = new HashMap<>();
         List<Banknote> banknoteList = new ArrayList<>(atm.getBanknotes().keySet());
         banknoteList.sort(Collections.reverseOrder());
-        BigDecimal tempSum = sum;
+        BigDecimal tempSum = getMoneyFromAtmDto.getSum();
         for (Banknote banknote : banknoteList) {
             if (tempSum.equals(new BigDecimal(0))) {
                 break;
             }
             Long countBanknotes = tempSum.divideAndRemainder(new BigDecimal(banknote.getValue()))[0].longValue();
+            if (countBanknotes > atm.getBanknotes().get(banknote)) {
+                countBanknotes = atm.getBanknotes().get(banknote);
+            }
             result.put(banknote, countBanknotes);
             tempSum = tempSum.subtract(new BigDecimal(countBanknotes * banknote.getValue()));
             atm.subtractBanknotes(banknote, countBanknotes);
         }
-        bankAccount.subtractMoney(sum);
+        bankAccount.subtractMoney(getMoneyFromAtmDto.getSum());
         bankAccountService.save(bankAccount);
         atmService.save(atm);
         return result;
