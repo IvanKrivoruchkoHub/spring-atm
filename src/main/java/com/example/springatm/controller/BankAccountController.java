@@ -3,6 +3,7 @@ package com.example.springatm.controller;
 import com.example.springatm.dto.AddMoneyToAccountDto;
 import com.example.springatm.dto.BankAccountAndUserCreateDto;
 import com.example.springatm.dto.BankAccountCreateDto;
+import com.example.springatm.dto.ChangePasswordDto;
 import com.example.springatm.dto.SendSumToAccountDto;
 import com.example.springatm.entity.BankAccount;
 import com.example.springatm.entity.Role;
@@ -12,6 +13,7 @@ import com.example.springatm.service.UserService;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -101,5 +103,13 @@ public class BankAccountController {
                     HttpStatus.INTERNAL_SERVER_ERROR, "Can't send money", e);
         }
         return fromAccount.getSum();
+    }
+
+    @PutMapping(value = "/changePassword")
+    public void changePassword(@RequestBody ChangePasswordDto changePasswordDto,
+                               Authentication authentication) {
+        userService.changePassword(authentication.getName(),
+                changePasswordDto.getOldPassword(),
+                changePasswordDto.getNewPassword());
     }
 }

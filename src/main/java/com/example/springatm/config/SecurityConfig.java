@@ -33,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/bankAccount/newBankAccountForUser").hasRole("ADMIN")
                 .antMatchers("/atm/gettingBanknotes",
                         "/bankAccount/addingSum",
-                        "/bankAccount/sendingSum").hasRole("USER")
+                        "/bankAccount/sendingSum",
+                        "/bankAccount//changePassword").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

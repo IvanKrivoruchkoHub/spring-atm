@@ -8,4 +8,6 @@ public interface UserService {
     User findByLogin(String login);
 
     boolean isUserExist(String login);
+
+    void changePassword(String login, String oldPassword, String newPassword);
 }
