@@ -5,20 +5,18 @@ import com.example.springatm.dto.GetMoneyFromAtmDto;
 import com.example.springatm.entity.Atm;
 import com.example.springatm.entity.Banknote;
 import com.example.springatm.service.AtmService;
-import com.example.springatm.service.BankAccountService;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController(value = "/atm")
+@RestController
+@RequestMapping(value = "/atm")
 public class AtmController {
     @Autowired
     private AtmService atmService;
-
-    @Autowired
-    private BankAccountService bankAccountService;
 
     @PostMapping(value = "/addingBanknotes")
     public void addBanknotes(@RequestBody AtmBanknotesDto atmBanknotesDto) {

@@ -12,19 +12,25 @@ import com.example.springatm.service.UserService;
 import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-@RestController(value = "/bankAccount")
+@RestController
+@RequestMapping(value = "/bankAccount")
 public class BankAccountController {
     @Autowired
     private UserService userService;
 
     @Autowired
     private BankAccountService bankAccountService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/newUserAndBankAccount")
     public String createBankAccountAndUser(
@@ -36,7 +42,7 @@ public class BankAccountController {
         }
         User user = new User();
         user.setLogin(bankAccountAndUserCreateDto.getLogin());
-        user.setPassword(bankAccountAndUserCreateDto.getPassword());
+        user.setPassword(passwordEncoder.encode(bankAccountAndUserCreateDto.getPassword()));
         user.addRole(Role.USER);
         BankAccount bankAccount = new BankAccount();
         bankAccount.setSum(bankAccountAndUserCreateDto.getSum());
@@ -56,7 +62,6 @@ public class BankAccountController {
         userService.save(user);
         return bankAccount.getNumberOfBankAccount();
     }
-
 
     @PutMapping(value = "/addingSum")
     public BigDecimal addMoneyToAccount(@RequestBody AddMoneyToAccountDto addMoneyToAccountDto) {

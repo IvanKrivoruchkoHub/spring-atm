@@ -11,6 +11,7 @@ import com.example.springatm.service.UserService;
 import java.math.BigDecimal;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -23,6 +24,9 @@ public class InitController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostConstruct
     private void init() {
@@ -45,9 +49,15 @@ public class InitController {
         User user = new User();
         user.addBankAccount(bankAccount1);
         user.addBankAccount(bankAccount2);
-        user.setLogin("user1");
+        user.setLogin("user");
         user.addRole(Role.USER);
-        user.setPassword("user1");
+        user.setPassword(passwordEncoder.encode("user"));
         userService.save(user);
+
+        User admin = new User();
+        admin.setLogin("admin");
+        admin.addRole(Role.ADMIN);
+        admin.setPassword(passwordEncoder.encode("admin"));
+        userService.save(admin);
     }
 }
