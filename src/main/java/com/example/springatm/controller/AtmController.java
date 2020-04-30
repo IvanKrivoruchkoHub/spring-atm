@@ -21,14 +21,16 @@ public class AtmController {
     @PostMapping(value = "/addingBanknotes")
     public void addBanknotes(@RequestBody AtmBanknotesDto atmBanknotesDto) {
         Atm atm = atmService.findById(atmBanknotesDto.getAtmId());
-        for (Map.Entry<Banknote, Long> banknoteEntry : atmBanknotesDto.getBanknoteMap().entrySet()) {
+        for (Map.Entry<Banknote, Long> banknoteEntry :
+                atmBanknotesDto.getBanknoteMap().entrySet()) {
             atm.addBanknotes(banknoteEntry.getKey(), banknoteEntry.getValue());
         }
         atmService.save(atm);
     }
 
     @PostMapping(value = "/gettingBanknotes")
-    public Map<Banknote, Long> getBanknotesFromAtm(@RequestBody GetMoneyFromAtmDto getMoneyFromAtmDto) {
+    public Map<Banknote, Long> getBanknotesFromAtm(
+            @RequestBody GetMoneyFromAtmDto getMoneyFromAtmDto) {
         return atmService.getBanknotesFromAtm(getMoneyFromAtmDto.getSum(),
                 getMoneyFromAtmDto.getNumberOfAccount(),
                 getMoneyFromAtmDto.getAtmId());

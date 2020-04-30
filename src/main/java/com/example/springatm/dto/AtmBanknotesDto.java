@@ -1,8 +1,8 @@
 package com.example.springatm.dto;
 
 import com.example.springatm.entity.Banknote;
-import lombok.Data;
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class AtmBanknotesDto {

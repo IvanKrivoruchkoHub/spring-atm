@@ -7,6 +7,8 @@ import java.util.Map;
 
 public interface AtmService {
     Atm save(Atm atm);
+
     Atm findById(Long id);
+
     Map<Banknote, Long> getBanknotesFromAtm(BigDecimal sum, String numberOfAccount, Long atmId);
 }

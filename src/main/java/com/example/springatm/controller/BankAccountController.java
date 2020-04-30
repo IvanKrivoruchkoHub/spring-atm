@@ -40,7 +40,8 @@ public class BankAccountController {
         if (userService.isUserExist(bankAccountAndUserCreateDto.getLogin())) {
             throw new ResponseStatusException(
                     HttpStatus.INTERNAL_SERVER_ERROR,
-                    "User has already exist with login = " + bankAccountAndUserCreateDto.getLogin());
+                    "User has already exist with login = "
+                            + bankAccountAndUserCreateDto.getLogin());
         }
         User user = new User();
         user.setLogin(bankAccountAndUserCreateDto.getLogin());

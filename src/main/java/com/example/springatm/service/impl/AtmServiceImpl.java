@@ -43,7 +43,8 @@ public class AtmServiceImpl implements AtmService {
     }
 
     @Override
-    public Map<Banknote, Long> getBanknotesFromAtm(BigDecimal sum, String numberOfAccount, Long atmId) {
+    public Map<Banknote, Long> getBanknotesFromAtm(BigDecimal sum,
+                                                   String numberOfAccount, Long atmId) {
         BankAccount bankAccount = bankAccountService
                 .findByNumberOfBankAccount(numberOfAccount);
         Atm atm = findById(atmId);
@@ -73,7 +74,8 @@ public class AtmServiceImpl implements AtmService {
             if (tempSum.equals(new BigDecimal(0))) {
                 break;
             }
-            Long countBanknotes = tempSum.divideAndRemainder(new BigDecimal(banknote.getValue()))[0].longValue();
+            Long countBanknotes = tempSum
+                    .divideAndRemainder(new BigDecimal(banknote.getValue()))[0].longValue();
             if (countBanknotes > atm.getBanknotes().get(banknote)) {
                 countBanknotes = atm.getBanknotes().get(banknote);
             }

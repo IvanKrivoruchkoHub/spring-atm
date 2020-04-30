@@ -1,6 +1,5 @@
 package com.example.springatm.entity;
 
-import lombok.Data;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CollectionTable;
@@ -15,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import lombok.Data;
 
 @Data
 @Entity
