@@ -17,7 +17,7 @@ Cлід реалізувати банкомат
 
 Видати банкомат може суми, які є тільки комбінацією вищенаведених купюр
 
-Задеплоїти апплікейшн на Google Cloud / AWS
+Задеплоїти апплікейшн на Google Cloud / AWS (deployed on heroku https://spring-atm.herokuapp.com/)
 
 Створити README і описати проект
 
